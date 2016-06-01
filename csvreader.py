@@ -24,9 +24,10 @@ def maxVotes(postfile):
     
 def getPopularUsers(userfile):
     '''Given filename containing user IDs and their
-    numbers of followers, calculate top 100 most 
-    popular users (i.e. the top 100 users with 
-    the most followers. Returns a list of user IDs'''
+    numbers of followers, calculate top 10000 most 
+    popular users (i.e. the top 10000 users with 
+    the most followers.) and the 10000 least popular users (i.e.
+    the ones with the least followers) Returns two lists of user IDs'''
 
     userDict = {} #Format is user: followerCount
     with open(userfile,'rb') as csvfile:
@@ -41,12 +42,17 @@ def getPopularUsers(userfile):
                 userDict[(row[0])] = int(row[7])
             
     allUsers = sorted(userDict, key=userDict.__getitem__, reverse = True) #sort by follower count
+    #print len(allUsers)
+    return allUsers[0:10000], allUsers[-10000:]
 
-    return allUsers[0:10000]
-    
-def getMostPopularWords(postfile, popularUsers):
-    wordFrequencies = {}
-    tagList = []
+def getMostPopularWords(postfile):
+    mostPop, leastPop = getPopularUsers('users--2016-04-01_14-36-26-UTC.csv')
+
+    popWords = {}
+    leastPopWords = {}
+    popTags = []
+    leastPopTags = []
+
     with open(postfile,'rb') as csvfile:
         postReader = csv.reader(csvfile)
         firstline = True 
@@ -55,27 +61,93 @@ def getMostPopularWords(postfile, popularUsers):
                 firstline = False
                 continue
 
+            for user in mostPop:
+                if row[0] == user:
+                    popTags.append(row[3]) #append tagline of each pop user
+
+            for user2 in leastPop:
+                if row[0] == user2:
+                    leastPopTags.append(row[3]) #append tagline of each least pop user
+
+    for tag in popTags: 
+        for word in tag.split():
+            if word not in popWords: #populate pop word dictionary
+                popWords[word]=1
+            else:
+                popWords[word] += 1
+
+    for tag2 in leastPopTags:
+        for word2 in tag2.split():
+            if word2 not in leastPopTags: #populate least pop words dictionary
+                leastPopWords[word2]=1
+            else:
+                leastPopWords[word2] += 1
+
+    popular = sorted(popWords, key = popWords.__getitem__,reverse = True)
+    notPopular = sorted(leastPopWords, key = leastPopWords.__getitem__,reverse = True)
+    popular = popular[0:100] #get most popular words used for popular and not popular users
+    notPopular  = notPopular[0:100]
+
+    print "POPWORDS", popular
+    print "\n"
+    print "LEAST", notPopular
+    return popular
+
+def getNumPosts(popularUsers):
+    
+    userPosts = {}
+
+    with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
+        postReader = csv.reader(csvfile)
+        firstline = True 
+        for row in postReader:
+            if firstline:    #skip first line
+                firstline = False
+                continue
             for user in popularUsers:
                 if row[0] == user:
-                    tagList.append(row[3])
+                    userPosts[user] = row[10]
 
-    for tag in tagList:
-        for word in tag.split():
-            if word not in wordFrequencies:
-                wordFrequencies[word]=1
-            else:
-                wordFrequencies[word] += 1
+    popular = sorted(userPosts, key = userPosts.__getitem__, reverse = True)
+    popular = popular[0:100]
 
-    words = sorted(wordFrequencies, key = wordFrequencies.__getitem__,reverse = True)
-    print 'top', wordFrequencies[words[0]]
-    print words
-    return wordFrequencies
+    print userPosts[popular[0]]
+    print userPosts[popular[50]]
+
+    return popular
+
+def getNumVotes(popularUsers):
+    userVotes = {}
+
+    with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
+        voteReader = csv.reader(csvfile)
+        firstline = True 
+        for row in voteReader:
+            if firstline:    #skip first line
+                firstline = False
+                continue
+            for user in popularUsers:
+                if row[0] == user:
+                    userPosts[user] = row[9]
+
+    popular = sorted(userPosts, key = userPosts.__getitem__, reverse = True)
+    popular = popular[0:100]
+
+    print userVotes[popular[0]]
+    print userVotes[popular[50]]
+
+    return popular
+
     
             
 def main():
-    popularUsers = getPopularUsers('users--2016-04-01_14-36-26-UTC.csv')
-    getMostPopularWords('posts--2016-04-01_14-36-24-UTC.csv', popularUsers)
-    
+    mostPop, leastPop = getPopularUsers('users--2016-04-01_14-36-26-UTC.csv')
+    #getMostPopularWords('posts--2016-04-01_14-36-24-UTC.csv')
+    #print getNumPosts(mostPop)
+    print getNumVotes(mostPop)
+
+
+
 if __name__=='__main__':
     main()
             
