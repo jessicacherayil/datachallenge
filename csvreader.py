@@ -47,6 +47,7 @@ def getPopularUsers(userfile):
 
 def getMostPopularWords(postfile):
     mostPop, leastPop = getPopularUsers('users--2016-04-01_14-36-26-UTC.csv')
+    #print 'mostpop', mostPop
 
     popWords = {}
     leastPopWords = {}
@@ -88,9 +89,9 @@ def getMostPopularWords(postfile):
     popular = popular[0:100] #get most popular words used for popular and not popular users
     notPopular  = notPopular[0:100]
 
-    print "POPWORDS", popular
+    print "WORDS USED BY POPULAR USERS", popular
     print "\n"
-    print "LEAST", notPopular
+    print "WORDS USED BY UNPOPULAR USERS", notPopular
     return popular
 
 def getNumPosts(popularUsers):
@@ -106,7 +107,7 @@ def getNumPosts(popularUsers):
                 continue
             for user in popularUsers:
                 if row[0] == user:
-                    userPosts[user] = row[10]
+                    userPosts[user] = int(row[10])
 
     popular = sorted(userPosts, key = userPosts.__getitem__, reverse = True)
     popular = popular[0:100]
@@ -126,11 +127,12 @@ def getNumVotes(popularUsers):
             if firstline:    #skip first line
                 firstline = False
                 continue
+
             for user in popularUsers:
                 if row[0] == user:
-                    userPosts[user] = row[9]
+                    userVotes[user] = int(row[9])
 
-    popular = sorted(userPosts, key = userPosts.__getitem__, reverse = True)
+    popular = sorted(userVotes, key = userVotes.__getitem__, reverse = True)
     popular = popular[0:100]
 
     print userVotes[popular[0]]
@@ -143,7 +145,7 @@ def getNumVotes(popularUsers):
 def main():
     mostPop, leastPop = getPopularUsers('users--2016-04-01_14-36-26-UTC.csv')
     #getMostPopularWords('posts--2016-04-01_14-36-24-UTC.csv')
-    #print getNumPosts(mostPop)
+    print getNumPosts(mostPop)
     print getNumVotes(mostPop)
 
 
