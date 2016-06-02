@@ -107,75 +107,58 @@ def getMostPopularWords(postfile):
 def getNumPosts(popularUsers):
     
     userPosts = {}
+    popularUsers = popularUsers[0:500]
+    #print 'POPULAR USERS', popularUsers[0:25]
 
-    # with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
-    #     postReader = csv.reader(csvfile)
-    #     firstline = True 
-    #     for row in postReader:
-    #         if firstline:    #skip first line
-    #             firstline = False
-    #             continue
-    #         for user in popularUsers:
-    #             if row[0] == user:
-    #                 userPosts[user] = int(row[10])
-
-    # popular = sorted(userPosts, key = userPosts.__getitem__, reverse = True)
-    # popular = popular[0:100]
-
-    # l = []
-    # for i in range(0,25):
-    #     l.append(userPosts[popular[i]])
-
-    # print l
 
     with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
-        users = ['179569', '72696', '16065', '92', '38308', '749', '15864', '10202', '115732', '93344', '120713', '89993', '13803', '20297', '158779', '123392', '176571', '2', '104430', '160187', '61997', '213030', '29570', '121503', '348647']
-        result = []
         postReader = csv.reader(csvfile)
         firstline = True 
         for row in postReader:
             if firstline:    #skip first line
                 firstline = False
                 continue
-
-            for user in users:
+            for user in popularUsers:
                 if row[0] == user:
-                    result.append(int(row[10]))
+                    userPosts[user] = int(row[10])
 
-    print 'POSTS',result
-
-    # print userPosts[popular[0]]
-    # print userPosts[popular[50]]
-
-    return result #popular
-
-def getNumVotes(popularUsers):
-    userVotes = {}
+    l = []
+    p = []
+    for i in range(0,500):
+        #l.append(popularUsers[i])
+        p.append(userPosts[popularUsers[i]])
+    #print "l",l
+    print "p",p
+   
 
     # with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
-    #     voteReader = csv.reader(csvfile)
+    #     users = ['179569', '72696', '16065', '92', '38308', '749', '15864', '10202', '115732', '93344', '120713', '89993', '13803', '20297', '158779', '123392', '176571', '2', '104430', '160187', '61997', '213030', '29570', '121503', '348647']
+    #     result = []
+    #     resultDict = {}
+    #     postReader = csv.reader(csvfile)
     #     firstline = True 
-    #     for row in voteReader:
+    #     for row in postReader:
     #         if firstline:    #skip first line
     #             firstline = False
     #             continue
 
-    #         for user in popularUsers:
+    #         for user in users:
     #             if row[0] == user:
-    #                 userVotes[user] = int(row[9])
+    #                 resultDict[user] = int(row[10])
+    #                 result.append(int(row[10]))
 
-    # popular = sorted(userVotes, key = userVotes.__getitem__, reverse = True)
-    # popular = popular[0:100]
+    # print 'POSTS',resultDict
 
-    # l = []
-    # for i in range(0,25):
-    #     l.append(userVotes[popular[i]])
+    # print userPosts[popular[0]]
+    # print userPosts[popular[50]]
 
-    # print l
+    return userPosts #popular
+
+def getNumVotes(popularUsers):
+    userVotes = {}
+    popularUsers = popularUsers[0:500]
 
     with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
-        users = ['179569', '72696', '16065', '92', '38308', '749', '15864', '10202', '115732', '93344', '120713', '89993', '13803', '20297', '158779', '123392', '176571', '2', '104430', '160187', '61997', '213030', '29570', '121503', '348647']
-        result = []
         voteReader = csv.reader(csvfile)
         firstline = True 
         for row in voteReader:
@@ -183,11 +166,36 @@ def getNumVotes(popularUsers):
                 firstline = False
                 continue
 
-            for user in users:
+            for user in popularUsers:
                 if row[0] == user:
-                    result.append(int(row[9]))
+                    userVotes[user] = int(row[9])
 
-    print 'VOTES',result
+
+    l = []
+    p = []
+    for i in range(0,500):
+        #l.append(popularUsers[i])
+        p.append(userVotes[popularUsers[i]])
+    #print "l",l
+    print "p",p
+
+    # with open('users--2016-04-01_14-36-26-UTC.csv','rb') as csvfile:
+    #     users = ['179569', '72696', '16065', '92', '38308', '749', '15864', '10202', '115732', '93344', '120713', '89993', '13803', '20297', '158779', '123392', '176571', '2', '104430', '160187', '61997', '213030', '29570', '121503', '348647']
+    result = []
+    #     resultDict = {}
+    #     voteReader = csv.reader(csvfile)
+    #     firstline = True 
+    #     for row in voteReader:
+    #         if firstline:    #skip first line
+    #             firstline = False
+    #             continue
+
+    #         for user in users:
+    #             if row[0] == user:
+    #                 resultDict[user] = (int(row[9]))
+    #                 result.append(int(row[9]))
+
+    # print 'VOTES',resultDict
 
     # print userVotes[popular[0]]
     # print userVotes[popular[50]]
@@ -200,7 +208,7 @@ def main():
     mostPop, leastPop = getPopularUsers('users--2016-04-01_14-36-26-UTC.csv')
     #getMostPopularWords('posts--2016-04-01_14-36-24-UTC.csv')
     getNumPosts(mostPop)
-    getNumVotes(mostPop)
+    #getNumVotes(mostPop)
 
 
 
